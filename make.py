@@ -384,6 +384,18 @@ class DecklinkQuadHDMIRecorder(Board):
             "pcie",
         })
 
+# LX16DDR ------------------------------------------------------------------------------------------
+
+class LX16DDR(Board):
+    soc_kwargs = {
+        "uart_baudrate": int(2e6),
+    }
+    def __init__(self):
+        from boards.lx16ddr.soc import BaseSoC
+        Board.__init__(self, BaseSoC, soc_capabilities={
+            "serial",
+        })
+
 #---------------------------------------------------------------------------------------------------
 # Lattice Boards
 #---------------------------------------------------------------------------------------------------
@@ -690,6 +702,7 @@ supported_boards = {
     "mnt_rkx7"                    : MNT_RKX7,
     "stlv7325"                    : STLV7325,
     "decklink_quad_hdmi_recorder" : DecklinkQuadHDMIRecorder,
+    "lx16ddr"                     : LX16DDR,
 
     # Lattice
     "versa_ecp5"                  : VersaECP5,
@@ -777,7 +790,7 @@ def main():
             soc_kwargs.update(toolchain=args.toolchain)
 
         # UART.
-        soc_kwargs["uart_baudrate"] = int(args.uart_baudrate)
+        soc_kwargs["uart_baudrate"] = soc_kwargs.get("uart_baudrate", int(args.uart_baudrate))
         if "crossover" in board.soc_capabilities:
             soc_kwargs.update(uart_name="crossover")
         if "usb_fifo" in board.soc_capabilities:
